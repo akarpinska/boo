@@ -1,8 +1,7 @@
 package com.boo.app;
 
-import java.io.*;
-import java.util.Formatter;
-import java.util.Scanner;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Task 1: Given the list of phrases (in the form of text file with a phrase for a line) you need to count and output
@@ -14,22 +13,17 @@ public class App
 {
     public static void main( String[] args ) throws  IOException {
 
-        Scanner input = null;
-        Formatter output = null;
+        System.out.print("Enter input file name\n");
+        String inputFileName = System.console().readLine();
+        System.out.print("Enter output file name\n");
+        String outputFileName = System.console().readLine();
 
-        try {
-            input = new Scanner( new BufferedReader( new FileReader(args[0]) ));
-            output = new Formatter( new FileWriter(args[1]));
-            NGrams ngrams = new NGrams();
-            ngrams.calculateNGrams( input, output, Integer.parseInt(args[2]) );
-        }
-        finally {
-            if ( input != null ) {
-                input.close();
-            }
-            if ( output != null ) {
-                output.close();
-            }
-        }
+        INGramsReader reader = new TextFileNGramsReader(inputFileName);
+        INGramsSaver saver = new TextFileNGramsSaver(outputFileName);
+        INGramsProcessor processor = new NGramsProcessor();
+
+        Map ngrams = reader.readNGrams(3);
+        if ( ngrams != null )
+            saver.saveNGrams( processor.sortNGramsByUsage( ngrams ) );
     }
 }
