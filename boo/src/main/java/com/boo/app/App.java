@@ -1,5 +1,6 @@
 package com.boo.app;
 
+import com.boo.app.calculator.Calculator;
 import com.boo.app.ngrams.api.INGramsProcessor;
 import com.boo.app.ngrams.api.INGramsReader;
 import com.boo.app.ngrams.api.INGramsSaver;
@@ -16,8 +17,12 @@ import java.util.Map;
  * of usage in the descending order and printed to stdout.
  */
 public class App {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
+        runCalculator();
+    }
+
+    private static void runNGrams() {
         System.out.print("Enter input file name\n");
         String inputFileName = System.console().readLine();
         System.out.print("Enter output file name\n");
@@ -30,5 +35,10 @@ public class App {
         Map ngrams = reader.readNGrams(3);
         if (ngrams != null)
             saver.saveNGrams(processor.sortNGramsByUsage(ngrams));
+    }
+
+    private static void runCalculator() {
+        Calculator calc = new Calculator();
+        calc.run();
     }
 }

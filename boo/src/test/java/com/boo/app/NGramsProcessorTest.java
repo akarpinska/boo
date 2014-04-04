@@ -6,7 +6,7 @@ import com.boo.app.ngrams.impl.NGramsProcessor;
 import com.boo.app.ngrams.impl.StringStreamNGramsReader;
 import com.boo.app.ngrams.impl.StringStreamNGramsSaver;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
