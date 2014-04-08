@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by akarpinska on 4/7/14.
  */
-public class ConnectionImplTest {
+public class SocketHandlerImplTest {
 
     Socket mockedSocket;
 
@@ -25,8 +25,8 @@ public class ConnectionImplTest {
 
     @Test
     public void testExpressionReader() throws Exception {
-        ConnectionImpl connection = new ConnectionImpl(null);
-        Method readExpression = ConnectionImpl.class.getDeclaredMethod("readExpression", DataInputStream.class );
+        SocketHandlerImpl connection = new SocketHandlerImpl(null);
+        Method readExpression = SocketHandlerImpl.class.getDeclaredMethod("readExpression", DataInputStream.class );
         readExpression.setAccessible(true);
 
         String expected = "2+2";
@@ -42,7 +42,7 @@ public class ConnectionImplTest {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         when(mockedSocket.getInputStream()).thenReturn(createInputStream(expression));
         when(mockedSocket.getOutputStream()).thenReturn(createOutputStream(output));
-        ConnectionImpl connection = new ConnectionImpl(mockedSocket);
+        SocketHandlerImpl connection = new SocketHandlerImpl(mockedSocket);
         connection.run();
 
         String expected = "8.0\n";
@@ -55,7 +55,7 @@ public class ConnectionImplTest {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         when(mockedSocket.getInputStream()).thenReturn(createInputStream(expression));
         when(mockedSocket.getOutputStream()).thenReturn(createOutputStream(output));
-        ConnectionImpl connection = new ConnectionImpl(mockedSocket);
+        SocketHandlerImpl connection = new SocketHandlerImpl(mockedSocket);
         connection.run();
 
         String expected = "Invalid expression " + expression + ".\n";

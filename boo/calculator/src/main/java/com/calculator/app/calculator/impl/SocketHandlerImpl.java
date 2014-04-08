@@ -11,12 +11,12 @@ import java.nio.charset.Charset;
 /**
  * Created by anastasia on 4/4/14.
  */
-class ConnectionImpl implements Runnable {
+class SocketHandlerImpl implements Runnable {
 
     private final Socket socket;
     private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
 
-    public ConnectionImpl(Socket socket) {
+    public SocketHandlerImpl(Socket socket) {
         this.socket = socket;
     }
 
