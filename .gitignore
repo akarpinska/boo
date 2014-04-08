@@ -1,4 +1,4 @@
 .idea*
 .idea/
-boo.iml
+*.iml
 target/
