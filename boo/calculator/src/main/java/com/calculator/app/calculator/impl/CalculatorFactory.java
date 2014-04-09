@@ -7,7 +7,7 @@ import com.calculator.app.calculator.api.Server;
  */
 public class CalculatorFactory {
 
-    public static Server newServer() {
-        return new ServerImpl();
+    public static Server newServer(int maxUsersNumber) {
+        return new ServerImpl(maxUsersNumber);
     }
 }

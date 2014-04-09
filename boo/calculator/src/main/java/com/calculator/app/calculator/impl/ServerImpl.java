@@ -3,10 +3,8 @@ package com.calculator.app.calculator.impl;
 import com.calculator.app.calculator.api.Server;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -15,19 +13,14 @@ import java.util.concurrent.Executors;
  */
 class ServerImpl extends Thread implements Server {
 
-    private static final int DefaultPort = 2353;
-    private static final String PathToProperties = "/config.properties";
-    private static final String MaxUsersNumberProperty = "maxUsersNumber";
+    private static final int defaultPort = 2353;
 
     private ServerSocket serverSocket = null;
     private ExecutorService connections;
-    private Properties properties;
 
-    public ServerImpl() {
-        properties = readProperties();
-        int maxUsersNumber = Integer.valueOf(properties.getProperty(MaxUsersNumberProperty, "10"));
+
+    public ServerImpl(int maxUsersNumber) {
         connections = Executors.newFixedThreadPool(maxUsersNumber);
-        System.out.print(maxUsersNumber);
     }
 
     public void run() {
@@ -36,15 +29,14 @@ class ServerImpl extends Thread implements Server {
                 Socket socket = serverSocket.accept();
                 SocketHandlerImpl connection = new SocketHandlerImpl(socket);
                 connections.execute(connection);
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
     public void startServer() throws IOException {
-        serverSocket = new ServerSocket(DefaultPort);
+        serverSocket = new ServerSocket(defaultPort);
         start();
     }
 
@@ -53,37 +45,16 @@ class ServerImpl extends Thread implements Server {
         while (!connections.isTerminated()) {
             try {
                 sleep(20);
-            }
-            catch (InterruptedException e) {
+            } catch (InterruptedException e) {
                 break;
             }
         }
         try {
             serverSocket.close();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-            serverSocket = null;
-        }
-    }
-
-    private Properties readProperties() {
-        Properties properties = new Properties();
-        InputStream input = getClass().getResourceAsStream(PathToProperties);
-        try {
-            properties.load(input);
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            try {
-                input.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            serverSocket = null;
         }
-        return properties;
     }
 }
