@@ -13,14 +13,14 @@ import java.util.concurrent.Executors;
  */
 class ServerImpl extends Thread implements Server {
 
-    private static final int defaultPort = 2353;
-
     private ServerSocket serverSocket = null;
     private ExecutorService connections;
+    private int port;
 
 
-    public ServerImpl(int maxUsersNumber) {
+    public ServerImpl(int maxUsersNumber, int port) {
         connections = Executors.newFixedThreadPool(maxUsersNumber);
+        this.port = port;
     }
 
     public void run() {
@@ -36,7 +36,7 @@ class ServerImpl extends Thread implements Server {
     }
 
     public void startServer() throws IOException {
-        serverSocket = new ServerSocket(defaultPort);
+        serverSocket = new ServerSocket(port);
         start();
     }
 

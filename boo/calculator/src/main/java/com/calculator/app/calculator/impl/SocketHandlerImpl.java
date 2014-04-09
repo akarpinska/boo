@@ -27,11 +27,11 @@ class SocketHandlerImpl implements Runnable {
             String expression = readExpression(in);
 
             // This timeout is used to demonstrate parallel processing of requests
-            try {
-                Thread.sleep(15000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            //try {
+            //    Thread.sleep(15000);
+            //} catch (Exception e) {
+            //    e.printStackTrace();
+            //}
             try {
                 String result = ExpressionEvaluatorImpl.evaluate(expression);
                 out.writeBytes(result + "\n");
