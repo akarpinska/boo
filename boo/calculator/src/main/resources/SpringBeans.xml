@@ -1,16 +1,19 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:util="http://www.springframework.org/schema/util"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-  http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans.xsd"
+        >
 
-
-    <util:properties id="config" location="classpath:/config.properties" />
-
-    <bean id="calculatorFactoryBean" class="com.calculator.app.calculator.impl.CalculatorFactory">
-        <constructor-arg ref="config"/>
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:config.properties"/>
     </bean>
 
-    <bean id="createServerInstance" factory-bean="calculatorFactoryBean" factory-method="newServer"/>
+    <bean id="calculatorFactoryBean" class="com.calculator.app.calculator.impl.CalculatorFactory" scope="singleton">
+        <constructor-arg value="${maxUsersNumber}"/>
+        <constructor-arg value="${port}"/>
+    </bean>
+
+    <bean id="server" factory-bean="calculatorFactoryBean" factory-method="newServer" scope="singleton"
+          init-method="startServer" destroy-method="stopServer"/>
 
 </beans>
