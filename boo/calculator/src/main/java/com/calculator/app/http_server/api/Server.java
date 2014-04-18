@@ -1,4 +1,4 @@
-package com.calculator.app.calculator.api;
+package com.calculator.app.http_server.api;
 
 import java.io.IOException;
 

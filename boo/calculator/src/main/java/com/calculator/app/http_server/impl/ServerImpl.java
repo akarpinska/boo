@@ -1,6 +1,6 @@
-package com.calculator.app.calculator.impl;
+package com.calculator.app.http_server.impl;
 
-import com.calculator.app.calculator.api.Server;
+import com.calculator.app.http_server.api.Server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -27,7 +27,7 @@ class ServerImpl extends Thread implements Server {
         while (!connections.isShutdown()) {
             try {
                 Socket socket = serverSocket.accept();
-                SocketHandlerImpl connection = new SocketHandlerImpl(socket);
+                HttpSocketHandlerImpl connection = new HttpSocketHandlerImpl(socket);
                 connections.execute(connection);
             } catch (IOException e) {
                 e.printStackTrace();

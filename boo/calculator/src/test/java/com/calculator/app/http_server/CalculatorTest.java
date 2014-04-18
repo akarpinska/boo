@@ -1,4 +1,4 @@
-package com.calculator.app.calculator;
+package com.calculator.app.http_server;
 
 import org.testng.annotations.Test;
 
@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
  */
 public class CalculatorTest {
 
-    @Test(groups = { "calculator" })
+    @Test(groups = { "http_server" })
     public void evaluateExpression() {
 
 

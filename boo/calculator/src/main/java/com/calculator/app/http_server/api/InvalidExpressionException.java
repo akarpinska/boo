@@ -1,4 +1,4 @@
-package com.calculator.app.calculator.exceptions;
+package com.calculator.app.http_server.api;
 
 /**
  * Created by anastasia on 4/6/14.

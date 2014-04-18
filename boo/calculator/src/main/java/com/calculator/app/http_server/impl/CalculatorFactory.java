@@ -1,6 +1,6 @@
-package com.calculator.app.calculator.impl;
+package com.calculator.app.http_server.impl;
 
-import com.calculator.app.calculator.api.Server;
+import com.calculator.app.http_server.api.Server;
 
 /**
  * Created by anastasia on 4/6/14.

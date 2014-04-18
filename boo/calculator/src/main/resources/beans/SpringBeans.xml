@@ -5,10 +5,10 @@
         >
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:config.properties"/>
+        <property name="location" value="classpath:config/config.properties"/>
     </bean>
 
-    <bean id="calculatorFactoryBean" class="com.calculator.app.calculator.impl.CalculatorFactory" scope="singleton">
+    <bean id="calculatorFactoryBean" class="com.calculator.app.http_server.impl.CalculatorFactory" scope="singleton">
         <constructor-arg value="${maxUsersNumber}"/>
         <constructor-arg value="${port}"/>
     </bean>

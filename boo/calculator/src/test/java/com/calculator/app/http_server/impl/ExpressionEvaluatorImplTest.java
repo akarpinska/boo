@@ -1,6 +1,6 @@
-package com.calculator.app.calculator.impl;
+package com.calculator.app.http_server.impl;
 
-import com.calculator.app.calculator.exceptions.InvalidExpressionException;
+import com.calculator.app.http_server.api.InvalidExpressionException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
