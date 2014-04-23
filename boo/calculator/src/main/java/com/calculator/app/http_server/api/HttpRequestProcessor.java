@@ -3,9 +3,22 @@ package com.calculator.app.http_server.api;
 /**
  * Created by akarpinska on 4/22/14.
  */
-public interface HttpRequestProcessor {
+public abstract class HttpRequestProcessor {
 
-    public void onGet(HttpRequest httpRequest);
+    protected HttpSocketHandler httpSocketHandler = null;
+    private final String fileToProcess;
 
-    public void onPost(HttpRequest httpRequest);
+    protected HttpRequestProcessor(String fileToProcess) {
+        this.fileToProcess = fileToProcess;
+    }
+
+    abstract public void onGet(HttpRequest httpRequest);
+
+    abstract public void onPost(HttpRequest httpRequest);
+
+    public String getPathToFileToProcess() { return fileToProcess; }
+
+    public void setSocketHandler(HttpSocketHandler httpSocketHandler) {
+        this.httpSocketHandler = httpSocketHandler;
+    }
 }

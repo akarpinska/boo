@@ -5,15 +5,36 @@
         >
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="location" value="classpath:config/config.properties"/>
+        <property name="locations">
+            <list>
+                <value>config/config.properties</value>
+                <value>config/jdbc.properties</value>
+            </list>
+        </property>
     </bean>
 
-    <bean id="calculatorFactoryBean" class="com.calculator.app.http_server.impl.CalculatorFactory" scope="singleton">
-        <constructor-arg value="${maxUsersNumber}"/>
-        <constructor-arg value="${port}"/>
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="url" value="${database.url}"/>
+        <property name="driverClassName" value="${database.driver}"/>
+        <property name="username" value="${database.user}"/>
+        <property name="password" value="${database.password}"/>
+    </bean>
+
+    <bean id="databaseManager" class="com.calculator.app.backend.impl.DatabaseManagerImpl">
+        <constructor-arg ref="dataSource"/>
     </bean>
 
     <bean id="server" factory-bean="calculatorFactoryBean" factory-method="newServer" scope="singleton"
           init-method="startServer" destroy-method="stopServer"/>
+
+    <bean id="backendFactory" class="com.calculator.app.backend.impl.BackendFactoryImpl" scope="singleton">
+        <constructor-arg ref="databaseManager"/>
+    </bean>
+
+    <bean id="calculatorFactoryBean" class="com.calculator.app.http_server.impl.CalculatorFactory" scope="singleton">
+        <constructor-arg ref="backendFactory"/>
+        <constructor-arg value="${maxUsersNumber}"/>
+        <constructor-arg value="${port}"/>
+    </bean>
 
 </beans>

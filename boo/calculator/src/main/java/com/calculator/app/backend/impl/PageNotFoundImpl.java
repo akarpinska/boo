@@ -1,15 +1,14 @@
-package com.calculator.app.http_server.impl;
+package com.calculator.app.backend.impl;
 
 import com.calculator.app.http_server.api.HttpRequest;
-import com.calculator.app.http_server.api.HttpSocketHandler;
 
 /**
  * Created by akarpinska on 4/22/14.
  */
-public class PageNotFoundImpl extends HttpRequestProcessorImpl {
+class PageNotFoundImpl extends PageProcessorImpl {
 
-    public PageNotFoundImpl(HttpSocketHandler httpSocketHandler) {
-        super(httpSocketHandler);
+    public PageNotFoundImpl() {
+        super("");
     }
 
     public void onGet(HttpRequest httpRequest) {
