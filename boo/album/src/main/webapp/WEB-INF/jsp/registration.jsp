@@ -1,3 +1,29 @@
+<script language="JavaScript" type="text/javascript">
+<!--
+function checkform(form)
+{
+  var warningString = document.getElementById("warning");
+  if (form.fullname.value == "") {
+    warningString.innerHTML = "Enter your full name.";
+    return false;
+  }
+  if (form.username.value == "") {
+    warningString.innerHTML = "Enter username.";
+    return false;
+  }
+  if (form.password.value == "") {
+    warningString.innerHTML = "Enter password.";
+    return false;
+  }
+  if (form.password.value != form.confirm_password.value) {
+    warningString.innerHTML = "Password does not match confirmed password.";
+    return false;
+  }
+  return true;
+}
+//-->
+</script>
+
 <html>
 <head>
   <title>Registration</title>
@@ -6,10 +32,10 @@
   <table width="800" height="100%" align="center" style="background-color: #FFFFAA;">
   <tr><td>
    <h2 align="center">Create a new Photo Album account</h2>
-   <p align="center"><font color="red">${warning}</font></p>
+   <p align="center" id="warning" style="color: red">${warning}</p>
       <table align="center">
         <tr><td>
-          <form method="post">
+          <form method="post" onsubmit="return checkform(this);">
             <table  style="border: 1px solid black;">
               <tr><td>Full name:</td><td><input type="text" name="fullname"></td></tr>
               <tr><td>Username:</td><td><input type="text" name="username"></td></tr>

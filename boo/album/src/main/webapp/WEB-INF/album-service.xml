@@ -1,10 +1,24 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-  http://www.springframework.org/schema/beans/spring-beans.xsd"
+  http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/aop
+  http://www.springframework.org/schema/aop/spring-aop.xsd"
         >
 
     <bean id="modelFactory" class="com.album.model.impl.ModelFactoryImpl" />
     <bean id="albumService" class="com.album.model.impl.AlbumServiceImpl" autowire="constructor" />
+
+    <bean id="loggingAdvice" class="com.album.utils.ServiceLoggingAdvice" />
+
+    <aop:aspectj-autoproxy />
+
+    <aop:config>
+        <aop:pointcut id="loggingPointcut" expression="execution(public * com.album.model.api.AlbumService.*(..))" />
+        <aop:advisor advice-ref="loggingAdvice"
+                     pointcut-ref="loggingPointcut"
+                     id="loggingInterceptorAdviser" />
+    </aop:config>
 
 </beans>

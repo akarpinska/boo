@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
@@ -22,29 +23,24 @@ public class RegistrationController {
         this.albumService = albumService;
     }
 
-    @RequestMapping(value="/registration")
-    public String showRegistrationPage(Model model) {
+    @RequestMapping(value="/registration", method = GET)
+    public String processGet(Model model) {
         model.addAttribute("warning", "");
         return "registration";
     }
 
-    @RequestMapping(value="/registration", method=POST)
-    public String loginUser(@RequestParam("fullname") String fullName,
-                            @RequestParam("username") String username,
-                            @RequestParam("password") String password,
-                            @RequestParam("confirm_password") String confirmPassword,
-                            Model model) {
-        if (!password.equals(confirmPassword)) {
-            model.addAttribute("warning", "Password does not match confirmed password.");
-            return "registration";
-        }
+    @RequestMapping(value="/registration", method = POST)
+    public String processPost(@RequestParam("fullname") String fullName,
+                              @RequestParam("username") String username,
+                              @RequestParam("password") String password,
+                              Model model) {
 
-        if (albumService.registerNewUser(fullName, username, password))
+        if (albumService.registerNewUser(fullName, username, password)) {
+            model.addAttribute("username", fullName);
             return "main";
-        else {
+        } else {
             model.addAttribute("warning", "User with given name already exists.");
             return "registration";
         }
-
     }
 }

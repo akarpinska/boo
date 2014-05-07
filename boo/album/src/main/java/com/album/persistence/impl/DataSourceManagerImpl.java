@@ -3,8 +3,8 @@ package com.album.persistence.impl;
 import com.album.model.api.ModelFactory;
 import com.album.model.api.User;
 import com.album.persistence.api.DataSourceManager;
-import org.apache.commons.dbcp.BasicDataSource;
 
+import javax.sql.DataSource;
 import java.sql.*;
 
 /**
@@ -12,10 +12,10 @@ import java.sql.*;
  */
 class DataSourceManagerImpl implements DataSourceManager {
 
-    BasicDataSource dataSource;
+    DataSource dataSource;
     ModelFactory modelFactory;
 
-    public DataSourceManagerImpl(BasicDataSource dataSource,
+    public DataSourceManagerImpl(DataSource dataSource,
                                  ModelFactory modelFactory) {
         this.dataSource = dataSource;
         this.modelFactory = modelFactory;
