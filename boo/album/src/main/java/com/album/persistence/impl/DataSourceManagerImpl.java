@@ -3,9 +3,10 @@ package com.album.persistence.impl;
 import com.album.model.api.ModelFactory;
 import com.album.model.api.User;
 import com.album.persistence.api.DataSourceManager;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.util.List;
 
 /**
  * Created by akarpinska on 5/6/14.
@@ -24,51 +25,35 @@ class DataSourceManagerImpl implements DataSourceManager {
 
     public boolean saveNewUser(User user)
     {
-        try {
-            Connection connection = dataSource.getConnection();
-            PreparedStatement saveUserStmt = connection.prepareStatement(
-                    "INSERT INTO users (userName, password, fullName) VALUES (?, ?, ?)");
-            saveUserStmt.setString(1, user.getUsername());
-            saveUserStmt.setBytes(2, user.getHashedPassword());
-            saveUserStmt.setString(3, user.getFullName());
-            return saveUserStmt.executeUpdate() != 0;
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
+        String sql = "INSERT INTO users (userName, password, fullName) VALUES (?, ?, ?)";
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        int result = jdbcTemplate.update(sql,
+                new Object[] {user.getUsername(),user.getHashedPassword(), user.getFullName()});
+
+        return result != 0;
     }
 
     public User loadUser(String userName, byte[] hashedPassword) {
-        try {
-            Connection connection = dataSource.getConnection();
-            PreparedStatement loadUserStmt = connection.prepareStatement(
-                    "SELECT fullName FROM users where userName=? and password=?");
-            loadUserStmt.setString(1, userName);
-            loadUserStmt.setBytes(2, hashedPassword);
-            ResultSet result = loadUserStmt.executeQuery();
-            if (result.first() ) {
-                String fullName = result.getString(1);
-                return modelFactory.newUser(fullName, userName, hashedPassword);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        String sql = "SELECT fullName FROM users where userName=? and password=?";
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        List<String> result = jdbcTemplate.queryForList(sql, new Object[]{userName, hashedPassword}, String.class);
+        if (result.size() == 1) {
+            return modelFactory.newUser(result.get(0), userName, hashedPassword);
         }
         return null;
     }
 
     private void createTables() {
-        try {
-            Connection connection = dataSource.getConnection();
-            Statement createTableStmt = connection.createStatement();
-            createTableStmt.executeUpdate("CREATE TABLE IF NOT EXISTS users (" +
-                    "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
-                    "userName VARCHAR(128) NOT NULL UNIQUE, " +
-                    "password BLOB NOT NULL, " +
-                    "fullName VARCHAR(128) NOT NULL)");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        String sql = "CREATE TABLE IF NOT EXISTS users (" +
+                "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+                "userName VARCHAR(128) NOT NULL UNIQUE, " +
+                "password BLOB NOT NULL, " +
+                "fullName VARCHAR(128) NOT NULL)";
+
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        jdbcTemplate.execute(sql);
     }
 
 }

@@ -21,9 +21,7 @@
         <property name="maxActive" value="${database.pool.max_active}" />
     </bean>
 
-    <bean id="dataSourceManager" class="com.album.persistence.impl.DataSourceManagerImpl" >
-        <constructor-arg ref="dataSource" />
-        <constructor-arg ref="modelFactory" />
-    </bean>
+
+    <bean id="dataSourceManager" class="com.album.persistence.impl.DataSourceManagerImpl" autowire="constructor" />
 
 </beans>
