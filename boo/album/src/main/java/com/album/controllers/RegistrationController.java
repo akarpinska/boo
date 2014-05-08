@@ -1,6 +1,7 @@
 package com.album.controllers;
 
 import com.album.model.api.AlbumService;
+import com.album.model.api.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,13 +15,11 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  * Created by akarpinska on 5/6/14.
  */
 @Controller
-public class RegistrationController {
-
-    private final AlbumService albumService;
+public class RegistrationController extends BaseController {
 
     @Autowired
     public RegistrationController(AlbumService albumService) {
-        this.albumService = albumService;
+        super(albumService);
     }
 
     @RequestMapping(value="/registration", method = GET)
@@ -34,9 +33,10 @@ public class RegistrationController {
                               @RequestParam("username") String username,
                               @RequestParam("password") String password,
                               Model model) {
-
-        if (albumService.registerNewUser(fullName, username, password)) {
+        User user = albumService.registerNewUser(fullName, username, password);
+        if (user != null) {
             model.addAttribute("username", fullName);
+            session().setAttribute("user", user);
             return "main";
         } else {
             model.addAttribute("warning", "User with given name already exists.");

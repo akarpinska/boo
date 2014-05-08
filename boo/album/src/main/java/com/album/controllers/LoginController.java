@@ -15,13 +15,11 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  * Created by anastasia on 4/30/14.
  */
 @Controller
-public class LoginController {
-
-    private final AlbumService albumService;
+public class LoginController extends BaseController {
 
     @Autowired
     public LoginController(AlbumService albumService) {
-        this.albumService = albumService;
+        super(albumService);
     }
 
     @RequestMapping(value={"/", "/login"}, method = GET)

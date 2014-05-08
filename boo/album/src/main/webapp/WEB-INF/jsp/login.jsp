@@ -1,26 +1,12 @@
-<script language="JavaScript" type="text/javascript">
-<!--
-function checkform(form)
-{
-  var warningString = document.getElementById("warning");
-  if (form.username.value == "") {
-    warningString.innerHTML = "Enter username.";
-    return false;
-  }
-  if (form.password.value == "") {
-    warningString.innerHTML = "Enter password.";
-    return false;
-  }
-  return true;
-}
-//-->
-</script>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
 <head>
+  <link href='<c:url value="/resources/css/style.css" />' rel="stylesheet">
+  <script src='<c:url value="/resources/js/check_login.js" />'></script>
   <title>Login your album</title>
 </head>
-<body style="background-color: black; margin-top: 0; margin-bottom: 0;">
+<body>
   <table width="800" height="100%" align="center" style="background-color: #FFFFAA;">
   <tr><td>
     <h2 align="center">Welcome to Photo Album!</h2>

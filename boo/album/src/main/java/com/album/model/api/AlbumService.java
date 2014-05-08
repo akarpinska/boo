@@ -5,7 +5,8 @@ package com.album.model.api;
  */
 public interface AlbumService {
 
-    public boolean registerNewUser(String fullName, String username, String password);
+    public User registerNewUser(String fullName, String username, String password);
 
     public User findUser(String username, String password);
+
 }

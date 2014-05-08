@@ -1,34 +1,12 @@
-<script language="JavaScript" type="text/javascript">
-<!--
-function checkform(form)
-{
-  var warningString = document.getElementById("warning");
-  if (form.fullname.value == "") {
-    warningString.innerHTML = "Enter your full name.";
-    return false;
-  }
-  if (form.username.value == "") {
-    warningString.innerHTML = "Enter username.";
-    return false;
-  }
-  if (form.password.value == "") {
-    warningString.innerHTML = "Enter password.";
-    return false;
-  }
-  if (form.password.value != form.confirm_password.value) {
-    warningString.innerHTML = "Password does not match confirmed password.";
-    return false;
-  }
-  return true;
-}
-//-->
-</script>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
 <head>
+  <link href='<c:url value="/resources/css/style.css" />' rel="stylesheet">
+  <script src='<c:url value="/resources/js/check_registration.js" />'></script>
   <title>Registration</title>
 </head>
-<body style="background-color: black; margin-top: 0; margin-bottom: 0;">
+<body>
   <table width="800" height="100%" align="center" style="background-color: #FFFFAA;">
   <tr><td>
    <h2 align="center">Create a new Photo Album account</h2>

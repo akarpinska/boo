@@ -20,9 +20,11 @@ class AlbumServiceImpl implements AlbumService {
         this.modelFactory = modelFactory;
     }
 
-    public boolean registerNewUser(String fullName, String username, String password) {
+    public User registerNewUser(String fullName, String username, String password) {
         User user = modelFactory.newUser(fullName, username, Utils.getMd5Hash(password));
-        return dataSourceManager.saveNewUser(user);
+        if (dataSourceManager.saveNewUser(user) == false)
+            user = null;
+        return user;
     }
 
     public User findUser(String username, String password) {
