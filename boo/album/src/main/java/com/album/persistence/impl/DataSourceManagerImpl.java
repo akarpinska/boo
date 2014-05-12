@@ -20,7 +20,6 @@ class DataSourceManagerImpl implements DataSourceManager {
                                  ModelFactory modelFactory) {
         this.dataSource = dataSource;
         this.modelFactory = modelFactory;
-        createTables();
     }
 
     public boolean saveNewUser(User user)
@@ -43,17 +42,6 @@ class DataSourceManagerImpl implements DataSourceManager {
             return modelFactory.newUser(result.get(0), userName, hashedPassword);
         }
         return null;
-    }
-
-    private void createTables() {
-        String sql = "CREATE TABLE IF NOT EXISTS users (" +
-                "id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
-                "userName VARCHAR(128) NOT NULL UNIQUE, " +
-                "password BLOB NOT NULL, " +
-                "fullName VARCHAR(128) NOT NULL)";
-
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        jdbcTemplate.execute(sql);
     }
 
 }

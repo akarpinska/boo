@@ -35,9 +35,8 @@ public class RegistrationController extends BaseController {
                               Model model) {
         User user = albumService.registerNewUser(fullName, username, password);
         if (user != null) {
-            model.addAttribute("username", fullName);
             session().setAttribute("user", user);
-            return "main";
+            return "redirect: main.htm";
         } else {
             model.addAttribute("warning", "User with given name already exists.");
             return "registration";

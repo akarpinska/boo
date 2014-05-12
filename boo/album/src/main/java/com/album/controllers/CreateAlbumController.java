@@ -11,26 +11,26 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
- * Created by anastasia on 4/30/14.
+ * Created by akarpinska on 5/12/14.
  */
 @Controller
-public class MainController extends BaseController {
+public class CreateAlbumController extends BaseController {
 
     @Autowired
-    public MainController(AlbumService albumService) {
+    public CreateAlbumController(AlbumService albumService) {
         super(albumService);
     }
 
-    @RequestMapping(value={"/main"}, method = GET)
+    @RequestMapping(value={"/create_album"}, method = GET)
     public String processGet(Model model) {
         User user = (User) session().getAttribute("user");
         if (user == null)
             return "redirect: login";
-        return "main";
+        return "create_album";
     }
 
-    @RequestMapping(value={"/main"}, method = POST)
+    @RequestMapping(value={"/create_album"}, method = POST)
     public String processPost(Model model) {
-            return "main";
+        return "create_album";
     }
 }

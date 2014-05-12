@@ -35,8 +35,8 @@ public class LoginController extends BaseController {
 
         User user = albumService.findUser(username, password);
         if (user != null) {
-            model.addAttribute("username", user.getFullName());
-            return "main";
+            session().setAttribute("user", user);
+            return "redirect: main.htm";
         } else {
             model.addAttribute("warning", "Invalid username or password.");
             return "login";
