@@ -2,9 +2,11 @@
 
 <%@ page import="com.album.model.api.User" %>
 <%@ page import="com.album.model.api.Album" %>
+<%@ page import="com.album.model.api.Photo" %>
 <%@ page import="java.util.Iterator;" %>
 
 <% User user = (User) request.getSession().getAttribute("user"); %>
+<% Album album = (Album) request.getSession().getAttribute("album"); %>
 
 <html>
 <head>
@@ -20,9 +22,9 @@
     <p align="center" id="warning" style="color: red">${warning}</p>
     <table border=2 style="margin-right: 5%; margin-left: 5%; width: 90%;">
     <%
-      Iterator<Album> albumsIt = user.browseAlbums();
+      Iterator<Photo> photosIt = album.browsePhotos();
       int counter = 0;
-      while ( counter == 0 || albumsIt.hasNext() ) {
+      while ( counter == 0 || photosIt.hasNext() ) {
           if (counter % 5 == 0) {
             %>
             <tr height="140">
@@ -33,25 +35,25 @@
           <%
             if (counter == 0) {
                 %>
-                <div id="create_album" style="border:3px solid black; background-color:#ffffCC; padding:25px; font-size:150%; text-align:center; display:none;">
-                  <form method="post">
-                    Album name: <input type="text" name="album_name"><br><br>
-                    <input type="submit" value="Create" style="width: 80; margin-right: 15; font-size:16;" onClick="Popup.hide('create_album'); return true;">
-                    <button type="cancel" style="width: 80; margin-left: 15; font-size:16" onClick="Popup.hide('create_album'); return false;">Cancel</button>
+                <div id="add_photos" style="border:3px solid black; background-color:#ffffCC; padding:25px; font-size:150%; text-align:center; display:none;">
+                  <form method="post" enctype="multipart/form-data">
+                    <input type="file" name="files" accept="image/*" style="width: 200; align: center; font-size:14" multiple><br><br>
+                    <input type="submit" value="Add" style="width: 80; margin-right: 15; font-size:16;" onClick="Popup.hide('add_photos'); return true;">
+                    <button type="cancel" style="width: 80; margin-left: 15; font-size:16" onClick="Popup.hide('add_photos'); return false;">Cancel</button>
                   </from>
                 </div>
 
-                <a href="#" onclick="Popup.showModal('create_album');return false;">
+                <a href="#" onclick="Popup.showModal('add_photos');return false;">
                 <img src='<c:url value="/resources/img/plus.png" />' width="100" height="100">
-                <p style="font-size: 12">New album</p>
+                <p style="font-size: 12">Add photos</p>
                 </a>
                 <%
             }
             else {
-              Album album = albumsIt.next();
-              String url = "albums/" + album.getAlbumName();
+                Photo photo = photosIt.next();
+                String filePath = "img/" + photo.getFileName();
               %>
-                <a href="<%= url %>" ><%= album.getAlbumName() %></a>
+                <img src="<%= filePath %>" width="120" border=2 />
               <%
             }
           %>

@@ -19,7 +19,7 @@
             <tr><td>Password:</td><td><input type="password" name="password"></td></tr>
 	        <tr><td align="center" colspan="2">
                   <input type="submit" value="Login" style="width: 80; margin-right: 15">
-                  <a href="/album/registration.html"><button type="button" style="width: 80; margin-left: 15">Register</button></a>
+                  <a href="/album/registration.htm"><button type="button" style="width: 80; margin-left: 15">Register</button></a>
             </td></tr>
           </table>
         </form>

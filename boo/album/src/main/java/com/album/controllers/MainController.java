@@ -1,11 +1,13 @@
 package com.album.controllers;
 
+import com.album.model.api.Album;
 import com.album.model.api.AlbumService;
 import com.album.model.api.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -21,16 +23,18 @@ public class MainController extends BaseController {
         super(albumService);
     }
 
-    @RequestMapping(value={"/main"}, method = GET)
+    @RequestMapping(value={"/", "/main"}, method = GET)
     public String processGet(Model model) {
-        User user = (User) session().getAttribute("user");
-        if (user == null)
-            return "redirect: login";
+        model.addAttribute("warning", "");
         return "main";
     }
 
-    @RequestMapping(value={"/main"}, method = POST)
-    public String processPost(Model model) {
-            return "main";
+    @RequestMapping(value={"/", "/main"}, method = POST)
+    public String processPost(Model model, @RequestParam("album_name") String albumName) {
+        User user = (User) session().getAttribute("user");
+        Album album = albumService.createNewAlbum(user, albumName);
+        if (album == null)
+            model.addAttribute("warning", "Album with name " + albumName + " already exists.");
+        return "main";
     }
 }

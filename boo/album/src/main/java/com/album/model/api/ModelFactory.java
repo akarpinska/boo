@@ -6,4 +6,9 @@ package com.album.model.api;
 public interface ModelFactory {
 
     public User newUser(String fullName, String username, byte[] hashedPassword);
+
+    public Album newAlbum(String albumName, User user);
+
+    public Photo newPhoto(String fileName, byte[] fileData);
+
 }

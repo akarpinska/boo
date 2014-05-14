@@ -22,21 +22,21 @@ public class LoginController extends BaseController {
         super(albumService);
     }
 
-    @RequestMapping(value={"/", "/login"}, method = GET)
+    @RequestMapping(value={"/login"}, method = GET)
     public String processGet(Model model) {
         model.addAttribute("warning", "");
         return "login";
     }
 
-    @RequestMapping(value={"/", "/login"}, method = POST)
+    @RequestMapping(value={"/login"}, method = POST)
     public String processPost(@RequestParam("username") String username,
                               @RequestParam("password") String password,
                               Model model) {
 
-        User user = albumService.findUser(username, password);
+        User user = albumService.loadUser(username, password);
         if (user != null) {
             session().setAttribute("user", user);
-            return "redirect: main.htm";
+            return "redirect:main.htm";
         } else {
             model.addAttribute("warning", "Invalid username or password.");
             return "login";
