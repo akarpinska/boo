@@ -18,7 +18,7 @@
     <p align="right" style="margin-right: 5%"><%= user.getFullName() %></p>
     <hr width="90%">
     <p align="center" id="warning" style="color: red">${warning}</p>
-    <table border=2 style="margin-right: 5%; margin-left: 5%; width: 90%;">
+    <table style="margin-right: 5%; margin-left: 5%; width: 90%;">
     <%
       Iterator<Album> albumsIt = user.browseAlbums();
       int counter = 0;
