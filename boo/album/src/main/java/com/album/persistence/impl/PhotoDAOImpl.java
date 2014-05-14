@@ -22,14 +22,14 @@ class PhotoDAOImpl extends JdbcDaoSupport implements PhotoDAO {
     }
 
     public Photo saveNewPhoto(Album album, String fileName, byte[] fileData) {
-        String sql = "INSERT INTO photos (album_id, file_name, file_data, comment) " +
-                "SELECT albums.id, ?, ?, ? " +
+        String sql = "INSERT INTO photos (album_id, file_name, file_data) " +
+                "SELECT albums.id, ?, ? " +
                 "FROM albums INNER JOIN users ON albums.user_id = users.id " +
                 "WHERE username = ? and albums.album_name = ?";
 
         int result;
         try {
-            result = getJdbcTemplate().update(sql, fileName, fileData, "",
+            result = getJdbcTemplate().update(sql, fileName, fileData,
                     album.getUser().getUsername(), album.getAlbumName());
             if (result != 0)
                 return modelFactory.newPhoto(fileName, fileData);
