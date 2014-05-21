@@ -1,14 +1,17 @@
 package com.album.persistence.api;
 
 import com.album.model.api.Album;
-import com.album.model.api.User;
+
+import java.util.List;
 
 /**
  * Created by akarpinska on 5/12/14.
  */
 public interface AlbumDAO {
 
-    public Album saveNewAlbum(User user, String albumName);
+    public Album saveNewAlbum(int userId, String albumName);
 
-    public void loadAlbums(User user);
+    public Album loadAlbum(int userId, String albumName);
+
+    public List<String> loadUserAlbums(int userId);
 }

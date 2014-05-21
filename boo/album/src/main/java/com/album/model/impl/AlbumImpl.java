@@ -1,47 +1,39 @@
 package com.album.model.impl;
 
 import com.album.model.api.Album;
-import com.album.model.api.Photo;
-import com.album.model.api.User;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by akarpinska on 5/13/14.
  */
 class AlbumImpl implements Album {
 
+    private final int id;
     private String albumName;
-    private final User user;
-    protected Map<String, Photo> photos;
+    private List<Integer> photoIds;
 
-    public AlbumImpl(String albumName, User user) {
+    public AlbumImpl(int id, String albumName) {
+        this.id = id;
         this.albumName = albumName;
-        this.user = user;
-        photos = new HashMap<String, Photo>();
+        photoIds = new ArrayList<Integer>();
+    }
+
+    public int getAlbumId() {
+        return id;
     }
 
     public String getAlbumName() {
         return albumName;
     }
 
-    public Iterator<Photo> browsePhotos() {
-        return photos.values().iterator();
+    public List<Integer> getPhotoIds() {
+        return photoIds;
     }
 
-    public void addPhoto(Photo photo) {
-        photos.put(photo.getFileName(), photo);
+    public void addPhotoId(Integer photoId) {
+        photoIds.add(photoId);
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public Photo getPhoto(String fileName) {
-        if (photos.containsKey(fileName))
-            return photos.get(fileName);
-        return null;
-    }
 }

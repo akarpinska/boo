@@ -27,13 +27,13 @@
     </bean>
 
 
-    <bean id="userDAO" class="com.album.persistence.impl.UserDAOImpl" autowire="constructor">
+    <bean id="userDAO" class="com.album.persistence.impl.UserDAOImpl" init-method="initialize">
         <property name="jdbcTemplate" ref="jdbcTemplate" />
     </bean>
-    <bean id="albumDAO" class="com.album.persistence.impl.AlbumDAOImpl" autowire="constructor">
+    <bean id="albumDAO" class="com.album.persistence.impl.AlbumDAOImpl" init-method="initialize">
         <property name="jdbcTemplate" ref="jdbcTemplate" />
     </bean>
-    <bean id="photoDAO" class="com.album.persistence.impl.PhotoDAOImpl" autowire="constructor">
+    <bean id="photoDAO" class="com.album.persistence.impl.PhotoDAOImpl" init-method="initialize">
         <property name="jdbcTemplate" ref="jdbcTemplate" />
     </bean>
 

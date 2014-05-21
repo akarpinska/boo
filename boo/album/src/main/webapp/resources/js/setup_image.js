@@ -1,7 +1,7 @@
 <!--
-function setupImage(target, source)
+function setupImage(target, source, src)
 {
-  target.src = source.src;
+  target.src = src;
   if (source.width > source.height) {
     target.width = "640";
     target.height = (640/source.width)*source.height;

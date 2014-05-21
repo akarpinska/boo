@@ -1,44 +1,1 @@
-package com.album.persistence.impl;
-
-import com.album.model.api.ModelFactory;
-import com.album.model.api.User;
-import com.album.persistence.api.UserDAO;
-import org.springframework.jdbc.core.support.JdbcDaoSupport;
-
-import java.util.List;
-
-/**
- * Created by akarpinska on 5/6/14.
- */
-class UserDAOImpl extends JdbcDaoSupport implements UserDAO {
-
-    ModelFactory modelFactory;
-
-    public UserDAOImpl(ModelFactory modelFactory) {
-        this.modelFactory = modelFactory;
-    }
-
-    public User saveNewUser(String fullName, String userName, byte[] hashedPassword)
-    {
-        String sql = "INSERT INTO users (userName, password, fullName) VALUES (?, ?, ?)";
-
-        int result = getJdbcTemplate().update(sql,
-                new Object[] {userName, hashedPassword, fullName});
-
-        if (result != 0)
-            return modelFactory.newUser(fullName, userName, hashedPassword);
-
-        return null;
-    }
-
-    public User loadUser(String userName, byte[] hashedPassword) {
-        String sql = "SELECT fullName FROM users where userName=? and password=?";
-
-        List<String> result = getJdbcTemplate().queryForList(sql, new Object[]{userName, hashedPassword}, String.class);
-        if (result.size() == 1) {
-            return modelFactory.newUser(result.get(0), userName, hashedPassword);
-        }
-        return null;
-    }
-
-}
+package com.album.persistence.impl;import com.album.model.api.User;import com.album.model.impl.ModelFactory;import com.album.persistence.api.UserDAO;import org.springframework.jdbc.core.simple.SimpleJdbcInsert;import org.springframework.jdbc.core.support.JdbcDaoSupport;import java.util.HashMap;import java.util.List;import java.util.Map;/** * Created by akarpinska on 5/6/14. */class UserDAOImpl extends JdbcDaoSupport implements UserDAO {    private SimpleJdbcInsert insertQuery;    public void initialize() {        insertQuery = new SimpleJdbcInsert(getJdbcTemplate()).withTableName("users").usingGeneratedKeyColumns("id");    }    public User saveNewUser(String fullName, String userName, byte[] hashedPassword)    {        Map parameters = new HashMap();        parameters.put("userName", userName);        parameters.put("fullName", fullName);        parameters.put("password", hashedPassword);        User newUser = null;        try {            Number userId = insertQuery.executeAndReturnKey(parameters);            newUser = ModelFactory.newUser(userId.intValue(), fullName, userName);        }        catch (Exception e) {            e.printStackTrace();        }        return newUser;    }    public User loadUser(String userName, byte[] hashedPassword) {        String sql = "SELECT id, fullName FROM users where userName=? and password=?";        List<Map<String, Object>> result = getJdbcTemplate().queryForList(sql, new Object[]{userName, hashedPassword});        User newUser = null;        if (result.size() == 1) {            int id = ((Number) result.get(0).get("id")).intValue();            String fullName = (String) result.get(0).get("fullName");            newUser = ModelFactory.newUser(id, fullName, userName);        }        return newUser;    }}

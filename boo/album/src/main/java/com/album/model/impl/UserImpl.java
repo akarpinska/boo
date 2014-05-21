@@ -1,28 +1,30 @@
 package com.album.model.impl;
 
-import com.album.model.api.Album;
 import com.album.model.api.User;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by akarpinska on 5/6/14.
  */
 class UserImpl implements User {
 
+    private final int id;
     private final String fullName;
     private final String username;
-    private final byte[] hashedPassword;
 
-    private Map<String, Album> albums;
+    private List<String> albumsNames;
 
-    public UserImpl(String fullName, String username, byte[] hashedPassword) {
+    public UserImpl(int id, String fullName, String username) {
+        this.id = id;
         this.fullName = fullName;
         this.username = username;
-        this.hashedPassword = hashedPassword;
-        albums = new HashMap<String, Album>();
+        albumsNames = new ArrayList<String>();
+    }
+
+    public int getUserId() {
+        return id;
     }
 
     public String getFullName() {
@@ -33,21 +35,11 @@ class UserImpl implements User {
         return username;
     }
 
-    public byte[] getHashedPassword() {
-        return hashedPassword;
+    public List<String> getAlbumsNames() {
+        return albumsNames;
     }
 
-    public Iterator<Album> browseAlbums() {
-        return albums.values().iterator();
-    }
-
-    public void addAlbum(Album album) {
-        albums.put(album.getAlbumName(), album);
-    }
-
-    public Album getAlbum(String albumName) {
-        if (albums.containsKey(albumName))
-            return albums.get(albumName);
-        return null;
+    public void addAlbumName(String albumName) {
+        albumsNames.add(albumName);
     }
 }

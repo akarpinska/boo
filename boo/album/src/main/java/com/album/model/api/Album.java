@@ -1,19 +1,18 @@
 package com.album.model.api;
 
-import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by akarpinska on 5/12/14.
  */
 public interface Album {
 
+    public int getAlbumId();
+
     public String getAlbumName();
 
-    public Iterator<Photo> browsePhotos();
+    public List<Integer> getPhotoIds();
 
-    public void addPhoto(Photo photo);
+    public void addPhotoId(Integer photoId);
 
-    public User getUser();
-
-    public Photo getPhoto(String fileName);
 }

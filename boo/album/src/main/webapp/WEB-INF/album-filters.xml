@@ -18,4 +18,6 @@
 
     <bean id="loginFilter" class="com.album.filters.LoginFilter" />
 
+    <bean id="exceptionsHandler" class="com.album.filters.ExceptionsHandler" />
+
 </beans>

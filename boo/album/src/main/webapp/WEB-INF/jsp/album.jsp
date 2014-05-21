@@ -2,7 +2,6 @@
 
 <%@ page import="com.album.model.api.User" %>
 <%@ page import="com.album.model.api.Album" %>
-<%@ page import="com.album.model.api.Photo" %>
 <%@ page import="java.util.Iterator;" %>
 
 <% User user = (User) request.getSession().getAttribute("user"); %>
@@ -36,39 +35,30 @@
 
     <p align="center" id="warning" style="color: red">${warning}</p>
     <table style="margin-right: 5%; margin-left: 5%; width: 90%;">
-    <%
-      Iterator<Photo> photosIt = album.browsePhotos();
-      int counter = 0;
-      while ( counter == 0 || photosIt.hasNext() ) {
-          if (counter % 5 == 0) {
-            %>
+      <tr height="140">
+
+        <td width="140" align="center" valign="middle">
+          <a href="#" onclick="Popup.showModal('add_photos');return false;">
+            <img src='<c:url value="/resources/img/plus.png" />' width="100" height="100">
+            <p style="font-size: 12">Add photos</p>
+          </a>
+        </td>
+
+        <c:set var="photos_counter" scope="page" value="0"/>
+        <c:forEach items="<%= album.getPhotoIds() %>" var="photoId">
+          <c:if test="${photos_counter % 5 == 4}">
+            </tr>
             <tr height="140">
-            <%
-          }
-          %>
+          </c:if>
+
+          <c:set var="photos_counter" scope="page" value="${photos_counter+1}" />
+
           <td width="140" align="center" valign="middle">
-          <%
-            if (counter == 0) {
-                %>
-                <a href="#" onclick="Popup.showModal('add_photos');return false;">
-                <img src='<c:url value="/resources/img/plus.png" />' width="100" height="100">
-                <p style="font-size: 12">Add photos</p>
-                </a>
-                <%
-            }
-            else {
-                Photo photo = photosIt.next();
-                String filePath = "img/" + photo.getFileName();
-              %>
-                <img id="<%= filePath %>" src="<%= filePath %>" width="120" border=2 onclick="setupImage(document.getElementById('big_img'), this); Popup.showModal('photo_div', null, 'center center', null);" />
-              <%
-            }
-          %>
+            <img src='<c:out value="img/small/${photoId}" />' width="120" border=2 onclick="setupImage(document.getElementById('big_img'), this, '<c:out value="img/${photoId}" />'); Popup.showModal('photo_div', null, 'center center', null);" />
           </td>
-          <%
-          ++counter;
-      }
-     %>
+        </c:forEach>
+
+      </tr>
     </table>
   </td></tr>
   </table>

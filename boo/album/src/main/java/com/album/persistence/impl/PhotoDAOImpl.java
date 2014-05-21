@@ -1,12 +1,10 @@
 package com.album.persistence.impl;
 
-import com.album.model.api.Album;
-import com.album.model.api.ModelFactory;
-import com.album.model.api.Photo;
 import com.album.persistence.api.PhotoDAO;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,43 +13,53 @@ import java.util.Map;
  */
 class PhotoDAOImpl extends JdbcDaoSupport implements PhotoDAO {
 
-    ModelFactory modelFactory;
+    private SimpleJdbcInsert insertQuery;
 
-    public PhotoDAOImpl(ModelFactory modelFactory) {
-        this.modelFactory = modelFactory;
+    public void initialize() {
+        insertQuery = new SimpleJdbcInsert(getJdbcTemplate()).withTableName("photos").usingGeneratedKeyColumns("id");
     }
 
-    public Photo saveNewPhoto(Album album, String fileName, byte[] fileData) {
-        String sql = "INSERT INTO photos (album_id, file_name, file_data) " +
-                "SELECT albums.id, ?, ? " +
-                "FROM albums INNER JOIN users ON albums.user_id = users.id " +
-                "WHERE username = ? and albums.album_name = ?";
-
-        int result;
+    public Integer saveNewPhoto(int albumId, byte[] sourceImage, byte[] smallImage) {
+        Map parameters = new HashMap();
+        parameters.put("album_id", albumId);
+        parameters.put("file_data", sourceImage);
+        parameters.put("preview_data", smallImage);
+        Integer photoId = null;
         try {
-            result = getJdbcTemplate().update(sql, fileName, fileData,
-                    album.getUser().getUsername(), album.getAlbumName());
-            if (result != 0)
-                return modelFactory.newPhoto(fileName, fileData);
+            Number result = insertQuery.executeAndReturnKey(parameters);
+            photoId = new Integer(result.intValue());
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return photoId;
     }
 
-    public void loadPhotos(Album album) {
-        String sql = "SELECT file_name, file_data FROM photos " +
-                "INNER JOIN albums ON album_id = albums.id " +
-                "INNER JOIN users ON albums.user_id = users.id " +
-                "WHERE users.username = ? and albums.album_name = ?";
+    public List<Integer> loadPhotoIdsForAlbum(int albumId) {
+        String sql = "SELECT id FROM photos WHERE album_id = ?";
+        return getJdbcTemplate().queryForList(sql, new Object[]{albumId}, Integer.class);
+    }
 
-        List<Map<String, Object>> photos = getJdbcTemplate().queryForList(sql,
-                new Object[]{album.getUser().getUsername(), album.getAlbumName()});
-        Iterator<Map<String, Object>> photosIt = photos.iterator();
-        while (photosIt.hasNext()) {
-            Map photo = photosIt.next();
-            album.addPhoto(modelFactory.newPhoto((String) photo.get("file_name"), (byte[]) photo.get("file_data")));
+    public byte[] loadPhoto(int photoId) {
+        String sql = "SELECT file_data FROM photos WHERE id = ?";
+        byte[] photo = null;
+        try {
+            photo = getJdbcTemplate().queryForObject(sql,  new Object[]{photoId}, byte[].class);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return photo;
+
+    }
+
+    public byte[] loadPreview(int photoId) {
+        String sql = "SELECT preview_data FROM photos WHERE id = ?";
+        byte[] preview = null;
+        try {
+            preview = getJdbcTemplate().queryForObject(sql,  new Object[]{photoId}, byte[].class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return preview;
     }
 }

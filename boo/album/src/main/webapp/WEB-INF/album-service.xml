@@ -7,15 +7,14 @@
   http://www.springframework.org/schema/aop/spring-aop.xsd"
         >
 
-    <bean id="modelFactory" class="com.album.model.impl.ModelFactoryImpl" />
-    <bean id="albumService" class="com.album.model.impl.AlbumServiceImpl" autowire="constructor" />
+    <bean id="albumService" class="com.album.service.impl.AlbumServiceImpl" autowire="constructor" />
 
     <bean id="loggingAdvice" class="com.album.utils.ServiceLoggingAdvice" />
 
     <aop:aspectj-autoproxy />
 
     <aop:config>
-        <aop:pointcut id="loggingPointcut" expression="execution(public * com.album.model.api.AlbumService.*(..))" />
+        <aop:pointcut id="loggingPointcut" expression="execution(public * com.album.service.api.AlbumService.*(..))" />
         <aop:advisor advice-ref="loggingAdvice"
                      pointcut-ref="loggingPointcut"
                      id="loggingInterceptorAdviser" />

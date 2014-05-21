@@ -1,7 +1,7 @@
 package com.album.controllers;
 
 import com.album.model.api.Album;
-import com.album.model.api.AlbumService;
+import com.album.service.api.AlbumService;
 import com.album.model.api.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -1,9 +1,9 @@
 package com.album.controllers;
 
+import com.album.exceptions.ResourceNotFoundException;
 import com.album.model.api.Album;
-import com.album.model.api.AlbumService;
-import com.album.model.api.Photo;
 import com.album.model.api.User;
+import com.album.service.api.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,10 +30,10 @@ public class AlbumController extends BaseController {
     }
 
     @RequestMapping(value={"/albums/{albumName}"}, method = GET)
-    public String processGet(Model model, @PathVariable String albumName) {
+    public String processGet(Model model, @PathVariable String albumName) throws ResourceNotFoundException {
         Album album = getAlbum(albumName);
         if (album == null)
-            return "redirect:/main";
+            throw new ResourceNotFoundException();
 
         session().setAttribute("album", album);
         return "album";
@@ -41,10 +41,10 @@ public class AlbumController extends BaseController {
 
     @RequestMapping(value={"/albums/{albumName}"}, method = POST)
     public String processPost(Model model, @PathVariable String albumName,
-                              @RequestParam("files") MultipartFile[] files) {
+                              @RequestParam("files") MultipartFile[] files) throws ResourceNotFoundException {
         Album album = getAlbum(albumName);
         if (album == null)
-            return "redirect:/main";
+            throw new ResourceNotFoundException();
 
         session().setAttribute("album", album);
         for (int i = 0; i < files.length; ++i) {
@@ -60,16 +60,32 @@ public class AlbumController extends BaseController {
         return "album";
     }
 
-    @RequestMapping(value={"/albums/img/{imageName}.{ext}"}, method = GET)
+    @RequestMapping(value={"/albums/img/{imageId}"}, method = GET)
     @ResponseBody
-    public byte[] showImage(Model model, @PathVariable String imageName, @PathVariable String ext) {
-        Album album = (Album) session().getAttribute("album");
-        Photo photo = album.getPhoto(imageName + "." + ext);
-        return photo.getData();
+    public byte[] showImage(Model model, @PathVariable String imageId) throws ResourceNotFoundException {
+        try {
+            int photoId = Integer.parseInt(imageId);
+            byte[] photo = albumService.loadPhoto(photoId);
+            return photo;
+        } catch (NumberFormatException e) {
+            throw new ResourceNotFoundException();
+        }
+    }
+
+    @RequestMapping(value={"/albums/img/small/{imageId}"}, method = GET)
+    @ResponseBody
+    public byte[] showPreview(Model model, @PathVariable String imageId) throws ResourceNotFoundException {
+        try {
+            int photoId = Integer.parseInt(imageId);
+            byte[] photo = albumService.loadPreview(photoId);
+            return photo;
+        } catch (NumberFormatException e) {
+            throw new ResourceNotFoundException();
+        }
     }
 
     private Album getAlbum(String albumName) {
         User user = (User) session().getAttribute("user");
-        return user.getAlbum(albumName);
+        return albumService.loadAlbum(user, albumName);
     }
 }

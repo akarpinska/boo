@@ -1,49 +1,57 @@
 package com.album.persistence.impl;
 
 import com.album.model.api.Album;
-import com.album.model.api.ModelFactory;
-import com.album.model.api.User;
+import com.album.model.impl.ModelFactory;
 import com.album.persistence.api.AlbumDAO;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by akarpinska on 5/6/14.
  */
 class AlbumDAOImpl extends JdbcDaoSupport implements AlbumDAO {
 
-    ModelFactory modelFactory;
+    private SimpleJdbcInsert insertQuery;
 
-    public AlbumDAOImpl(ModelFactory modelFactory) {
-        this.modelFactory = modelFactory;
+    public void initialize() {
+        insertQuery = new SimpleJdbcInsert(getJdbcTemplate()).withTableName("albums").usingGeneratedKeyColumns("id");
     }
 
-    public Album saveNewAlbum(User user, String albumName)
+    public Album saveNewAlbum(int userId, String albumName)
     {
-        String sql = "INSERT INTO albums (user_id, album_name) SELECT id, ? FROM users WHERE username = ?";
-
-        int result;
+        Map parameters = new HashMap();
+        parameters.put("user_id", userId);
+        parameters.put("album_name", albumName);
+        Album newAlbum = null;
         try {
-            result = getJdbcTemplate().update(sql, albumName, user.getUsername());
-            if (result != 0)
-                return modelFactory.newAlbum(albumName, user);
+            Number albumId = insertQuery.executeAndReturnKey(parameters);
+            newAlbum = ModelFactory.newAlbum(albumId.intValue(), albumName);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return newAlbum;
     }
 
-    public void loadAlbums(User user) {
-        String sql = "SELECT album_name FROM albums" +
-                " INNER JOIN users ON albums.user_id = users.id WHERE users.username = ?";
+    public List<String> loadUserAlbums(int userId) {
+        String sql = "SELECT album_name FROM albums WHERE user_id = ?";
+        return getJdbcTemplate().queryForList(sql, new Object[]{userId}, String.class);
+    }
 
-        List<String> albumNames = getJdbcTemplate().queryForList(sql, new Object[]{user.getUsername()}, String.class);
-        Iterator<String> albumNamesIt = albumNames.iterator();
-        while (albumNamesIt.hasNext()) {
-            user.addAlbum(modelFactory.newAlbum(albumNamesIt.next(), user));
+    public Album loadAlbum(int userId, String albumName) {
+        String sql = "SELECT id FROM albums where user_id=? and album_name=?";
+
+        List<Number> result = getJdbcTemplate().queryForList(sql,
+                new Object[]{userId, albumName}, Number.class);
+        Album newAlbum = null;
+        if (result.size() == 1) {
+            int albumId = result.get(0).intValue();
+            newAlbum = ModelFactory.newAlbum(albumId, albumName);
         }
+        return newAlbum;
     }
 }
