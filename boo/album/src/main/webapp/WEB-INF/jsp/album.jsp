@@ -17,7 +17,8 @@
 <body>
   <table width="800" height="100%" align="center" style="background-color: #FFFFAA;" id="main_table">
   <tr><td valign="top">
-    <p align="right" style="margin-right: 5%"><%= user.getFullName() %></p>
+    <%@ include file="header.jsp" %>
+    <a href="../main.htm" align="left" style="margin-left: 5%">Back to albums</a>
     <hr width="90%">
 
     <div id="add_photos" style="border:3px solid black; background-color:#ffffCC; padding:25px; font-size:150%; text-align:center; display:none;">

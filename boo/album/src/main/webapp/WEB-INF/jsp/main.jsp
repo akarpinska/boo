@@ -15,7 +15,7 @@
 <body>
   <table width="800" height="100%" align="center" style="background-color: #FFFFAA;">
   <tr><td valign="top">
-    <p align="right" style="margin-right: 5%"><%= user.getFullName() %></p>
+    <%@ include file="header.jsp" %>
     <hr width="90%">
     <p align="center" id="warning" style="color: red">${warning}</p>
     <table style="margin-right: 5%; margin-left: 5%; width: 90%;" id="albums_table">
